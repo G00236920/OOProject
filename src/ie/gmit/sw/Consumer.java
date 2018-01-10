@@ -68,45 +68,50 @@ public class Consumer implements Runnable{
 	}
 
 	public void run(){
-
-		pool.execute( new Runnable() {
+		try {
 			
-			public void run() {
+			int docCount = 2;
+			
+			while (docCount > 0) {
 				
-					for(int i = 0; i < minHashes.length; i++) {
+				Shingle s = q.take();
+				
+				if (s instanceof Poison) {
+					
+					docCount--;
+					
+				} else {
+					
+					pool.execute( new Runnable() {
 						
-						for(int z = 0; z < q.size(); z++) {
+						public void run() {
 							
-							try {
-								
-								Shingle s = q.take();
+							for (int i = 0; i < minHashes.length; i++) {
 								
 								int value = s.getHashValue() ^ minHashes[i];
 								
 								list = map.get(s.getDocumentId());
+
+								if (list.get(i) > value) {
 									
-									if(list.get(i) > value) {
-										
-										System.out.println("Worked");
-										list.add(i,value);
-										
-									}
+									list.set(i, value);
 									
-							}
-							catch(Exception e) {
-								
-								e.printStackTrace();
+								}
 								
 							}
-							
 							
 						}
-
-					}
+						
+					});
 					
 				}
-				
-			});
+			}
+			
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		}
+
 	}
 	
 }
