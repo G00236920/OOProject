@@ -27,7 +27,7 @@ public class Launch {
 		//Thread Declarations
 		Thread t1 =  new Thread(new Parser(SHINGLESIZE, q, f1, 1));
 		Thread t2 =  new Thread(new Parser(SHINGLESIZE, q, f2, 2));
-		Thread t3 = new Thread(new Consumer( getQ(), getK(), 10 ));
+		Thread t3 = new Thread(new Consumer( getQ(), getK(), 20 ));
 		
 		//Start Threads
 		t1.start();

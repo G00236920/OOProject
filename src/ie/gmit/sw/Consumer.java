@@ -24,9 +24,9 @@ public class Consumer implements Runnable{
 		this.q = q;
 		this.k = k;
 		
-		init();
-		
 		pool = Executors.newFixedThreadPool(poolSize);
+		
+		init();
 
 	}
 	
@@ -69,18 +69,12 @@ public class Consumer implements Runnable{
 
 	public void run(){
 		try {
-			
-			int docCount = 2;
-			
-			while (docCount > 0) {
+
+			while(q.size() != 0) {
 				
-				Shingle s = q.take();
+				//System.out.println(q.size());
 				
-				if (s instanceof Poison) {
-					
-					docCount--;
-					
-				} else {
+				Shingle s = q.take();	
 					
 					pool.execute( new Runnable() {
 						
@@ -91,7 +85,7 @@ public class Consumer implements Runnable{
 								int value = s.getHashValue() ^ minHashes[i];
 								
 								list = map.get(s.getDocumentId());
-
+								
 								if (list.get(i) > value) {
 									
 									list.set(i, value);
@@ -104,12 +98,10 @@ public class Consumer implements Runnable{
 						
 					});
 					
-				}
 			}
-			
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			
+			e.printStackTrace();
 		}
 
 	}
