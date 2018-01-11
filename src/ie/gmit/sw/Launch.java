@@ -13,7 +13,7 @@ public class Launch {
 	final static int K = 200;
 	final int SHINGLESIZE = 3;
 	
-	 static BlockingQueue <Shingle> q = new LinkedBlockingQueue <Shingle>(100);
+	 static BlockingQueue <Shingle> q = new LinkedBlockingQueue <Shingle>();
 
 	Launch(String fileName1, String fileName2) {
 		

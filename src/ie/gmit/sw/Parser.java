@@ -34,16 +34,8 @@ public class Parser implements Runnable {
 						
 						if(reset == SHINGLESIZE) {
 							
-							
-							synchronized(q) {
-								
-							    while (q.size()==100)
-							        q.wait(); //wait for the queue to become empty
 							    q.put(new Shingle(word.hashCode(), docId));
 							    
-							}
-							
-							word = "";
 							reset = 0;
 							
 						}

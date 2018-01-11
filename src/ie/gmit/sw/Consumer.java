@@ -94,14 +94,7 @@ public class Consumer implements Runnable{
 								{ 
 									int value = s.getHashValue() ^ minHashes[i];
 									
-									if(list.get(i) > value) {
-										
-										list.set(i, value);
-										System.out.println(value);
-										
-									}
 									
-									  
 								}
 								
 								
