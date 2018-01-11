@@ -13,12 +13,12 @@ public class Launch {
 	final static int K = 200;
 	final int SHINGLESIZE = 3;
 	
-	static BlockingQueue <Shingle> q = new LinkedBlockingQueue <Shingle>();
+	BlockingQueue <Shingle> q = new LinkedBlockingQueue <Shingle>();
 
 	Launch(String fileName1, String fileName2) {
 		
 		File f1 = new File("/Volumes/W_10_PRO_X6/OO/Object Project/src/file1.txt");
-		File f2 = new File("/Volumes/W_10_PRO_X6/OO/Object Project/src/file2.txt");
+		File f2 = new File("/Untitled//Users/newuser/Desktop/file2.txt");
 		
 		
 		//File f1 = new File(fileName1);
@@ -27,7 +27,7 @@ public class Launch {
 		//Thread Declarations
 		Thread t1 =  new Thread(new Parser(SHINGLESIZE, q, f1, 1));
 		Thread t2 =  new Thread(new Parser(SHINGLESIZE, q, f2, 2));
-		Thread t3 = new Thread(new Consumer( getQ(), getK(), 20 ));
+		Thread t3 = new Thread(new Consumer( getQ(), getK(), 100 ));
 		
 		//Start Threads
 		t1.start();
@@ -56,15 +56,15 @@ public class Launch {
 	}
 
 
-	public static BlockingQueue<Shingle> getQ() {
+	public BlockingQueue<Shingle> getQ() {
 		return q;
 	}
 
-	public static void setQ(BlockingQueue<Shingle> q) {
-		Launch.q = q;
+	public void setQ(BlockingQueue<Shingle> q) {
+		this.q = q;
 	}
 	
-	public static void addToQueue(Shingle s) {
+	public void addToQueue(Shingle s) {
 		q.add(s);
 	}
 	
