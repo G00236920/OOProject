@@ -34,12 +34,20 @@ public class Parser implements Runnable {
 						
 						if(reset == SHINGLESIZE) {
 							
-							q.add(new Shingle(word.hashCode(), docId));
+							
+							synchronized(q) {
+								
+							    while (q.size()==100)
+							        q.wait(); //wait for the queue to become empty
+							    q.put(new Shingle(word.hashCode(), docId));
+							    
+							}
 							
 							word = "";
 							reset = 0;
 							
 						}
+						
 						
 					}
 					else if ( (s > 64 && s < 91) || (s > 96 && s < 123) ) {
@@ -62,7 +70,10 @@ public class Parser implements Runnable {
 			
 			e.printStackTrace();
 			
-		}	
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		
 	}
 

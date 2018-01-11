@@ -68,6 +68,8 @@ public class Consumer implements Runnable{
 
 	public void run(){
 		
+		System.out.println(q.size());
+		
 		int docCount = 2;
 		
 		while( q.size() != 0 && docCount > 0) {
@@ -92,23 +94,14 @@ public class Consumer implements Runnable{
 								{ 
 									int value = s.getHashValue() ^ minHashes[i];
 									
-									
 									if(list.get(i) > value) {
 										
-										list.set(1, value);
+										list.set(i, value);
+										System.out.println(value);
 										
 									}
 									
-									/*
-									List<Integer> intersection = new ArrayList<Integer>(map.get(2));
-									intersection.retainAll(map.get(1));
-									
-									 float jaccard =((float) intersection.size())/((k)+((float)intersection.size()));
-									 System.out.println("documents are " + (jaccard*2)*100+ "% similar");
-									 //jaccard similarity
-									  */
 									  
-									
 								}
 								
 								
