@@ -12,6 +12,15 @@ public class Menu {
 
 	}
 
+/**
+ * Start
+ * 
+ * @param finished 
+ * 
+ * if the program or menu is finished yet
+ * 
+ * @return Boolean
+ */
 	public boolean Start(boolean finished) {
 
 		// Menu output
@@ -31,19 +40,24 @@ public class Menu {
 		// What happens with the input from the user
 		switch (intInput) {
 		case 1:
+			
+			//ask the user for the path to the first file
 			fileName1 = userInput("Please Enter the first File Path");
 
 			break;
 		case 2:
+			//ask the user for the path to the second file
 			fileName2 = userInput("Please Enter the Second File Path");
 
 			break;
 		case 3:
-			
+			//Launch the threads
 			new Launch(fileName1, fileName2);
 
 			break;
 		case 4:
+			
+			//User is finished with the menu
 			finished = true;
 
 			break;
@@ -57,11 +71,21 @@ public class Menu {
 
 	}
 
+	/**
+	 * Used so that we dont need the scanner multiple times, 
+	 * just call this method
+	 * 
+	 * @param output
+	 * 
+	 * Output message to the user
+	 * 
+	 * @return string
+	 */
+	
 	static String userInput(String output) {
 
 		System.out.println(output);
 
-		@SuppressWarnings("resource")
 		Scanner sc = new Scanner(System.in);
 
 		String input = sc.nextLine();

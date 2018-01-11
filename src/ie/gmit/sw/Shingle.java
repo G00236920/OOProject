@@ -4,7 +4,14 @@ public class Shingle {
 	
 	int hashValue;
 	int documentId; 
-	
+
+	/**
+	 * Shingle Object
+	 * Multiple strings concat and hashcoded
+	 * 	
+	 * @param hashValue
+	 * @param id
+	 */
 	Shingle(int hashValue, int id) {
 		this.hashValue = hashValue;
 		this.documentId = id;

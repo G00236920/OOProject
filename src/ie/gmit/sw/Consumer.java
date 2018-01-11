@@ -9,25 +9,41 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Consumer implements Runnable {
+	
 
 	private int[] minHashes;
 	private static ExecutorService pool;
 	private int k;
-	private BlockingQueue<Shingle> q;
-	private ConcurrentHashMap<Integer, List<Integer>> map = new ConcurrentHashMap<>();
+	private BlockingQueue <Shingle> q;
+	private ConcurrentHashMap<Integer, List> map = new ConcurrentHashMap<Integer, List>();
 
-	Consumer(BlockingQueue<Shingle> queue, int k, int poolSize) {
+	
+	/** Consumer
+	 * 
+	 * This object is the thread that creates worker threads that will work from the blocking queue
+	 * 
+	 * @param q: this is the blocking queue
+	 * @param k: this is the number of minhashes we will look for
+	 * @param poolsize: the pool is the pool of worker threads - max size
+	 */
+	Consumer(BlockingQueue<Shingle> q, int k, int poolSize) {
 		super();
 
-		this.q = queue;
+		this.q = q;
 		this.k = k;
+		
+		init();
+		
 		
 		pool = Executors.newFixedThreadPool(poolSize);
 
-		init();
-
 	}
-
+	
+	/**Init
+	 * 
+	 * This Method runs when the consumer class is initialized
+	 */
+	
 	public void init() {
 
 		// Generate our MinHash Values
@@ -61,59 +77,87 @@ public class Consumer implements Runnable {
 		}
 
 	}
-
+	
+	
+	
+	/**run
+	 * 
+	 * This Method runs when the consumer launches as a thread 
+	 */
 	public void run() {
-
-		int docCount = 2;
 		
-		while (!q.isEmpty()&& docCount > 0) {
-
-			try {
-
-				Shingle s = q.take();
-				System.out.println(q.size());
+		try {
+			
+			int docCount = 2;
+			
+			Shingle s = q.take();
+			
+			while (docCount > 0)
+			{
 				
-				if (s instanceof Poison) {
-					
+				if (s instanceof Poison) 
+				{
 					docCount--;
-				} 
-				else {
-
-					pool.execute(new Runnable() {
-
-						public void run() {
-
-							List<Integer> list = map.get(s.getDocumentId());
-
-							synchronized (list) {
-
-								for (int i = 0; i < minHashes.length; i++) {
-									
-									int value = s.getHashValue() ^ minHashes[i];
-
-									if (list.get(i) > value) {
-
-										list.set(i, value);
-
-									}
-
-								}
-							}
-
-						}
-
-					});
-
 				}
+				else	
+				{
+					
+					pool.execute( new Runnable()
+					{
 
-			} catch (InterruptedException e) {
+						public void run() 
+						{
+							
+							for (int i = 0; i < minHashes.length; i++) 
+							{
+								
+								
+								int value = s.getHashValue() ^ minHashes[i]; 			//XOR Minhashing
+								
+								/**@param list 
+								 * 
+								 * This is a list stored in the concurrent map
+								 * there is one list per document to store minHashes
+								 */
+								
+								List<Integer> list = map.get(s.getDocumentId());
 
-				e.printStackTrace();
-
+									synchronized(list) {
+										
+										if (list.get(i) > value) 
+										{
+											list.set(i, value);
+										}
+										
+									}
+										
+									
+									/** @param jaccard
+									 * 
+									 * This code take the similarity of each document and runs an equation to check 
+									 * if the document are similar or not
+									 */
+									
+									List<Integer> intersection = new ArrayList<Integer>(map.get(2));
+									intersection.retainAll(map.get(1));
+									
+									float jaccard =((float) intersection.size())/((k)+((float)intersection.size()));
+									System.out.println("documents are " + (jaccard*2)*100+ "% similar");
+						
+							}
+						}
+					});
+					
+				}
+				
 			}
-
+			
+			
+		} catch (InterruptedException e) {
+			
+			e.printStackTrace();
 		}
-
+		
 	}
 
 }
