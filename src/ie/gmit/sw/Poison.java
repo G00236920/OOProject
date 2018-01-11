@@ -12,6 +12,4 @@ public class Poison extends Shingle {
 		// TODO Auto-generated constructor stub
 	}
 
-	
-
 }
